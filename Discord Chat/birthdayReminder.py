@@ -4,21 +4,23 @@ import re
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
-import random, requests
+import random
+import requests
 from discord_webhook import *
 
-webhook=''
-with open('../Keys/webhook.json', 'r+') as f:
-    data = json.load(f)
-    webhook = data['birthChannel']
+webhook = 'https://discord.com/api/webhooks/879950702905028608/FSZCYPpoMx1O6AwVvjgxrNNoP25r6KEWkvf1d_LJhglx96iK9tyHf0xSj6B0mU371BpB'
 
 print("Program started on ", datetime.now())
+
 
 class initialise():
 
     url = f"{webhook}"
-    scopes = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/calendar']
-    creds = ServiceAccountCredentials.from_json_keyfile_name('../Keys/key.json', scopes)
+    scopes = ['https://spreadsheets.google.com/feeds',
+              'https://www.googleapis.com/auth/drive',
+              'https://www.googleapis.com/auth/calendar']
+    creds = ServiceAccountCredentials.from_json_keyfile_name(
+        'webhook.json', scopes)
     client = gspread.authorize(creds)
     sheet = client.open('Class_Reminders').get_worksheet(1)
 
@@ -49,11 +51,12 @@ class initialise():
                     print("Error in code ")
                     continue
 
-
     def call_disco(self, date, name):
         quote = random.choice(self.quotes)
-        embed = DiscordEmbed(title=f"Happy Birthday {name}", description=f"{quote}")
-        embed.set_author(name="Birthday Reminder 🎉 🥳", url="https://github.com/rishi-Sharma2002")
+        embed = DiscordEmbed(
+            title=f"Happy Birthday {name}", description=f"{quote}")
+        embed.set_author(name="Birthday Reminder 🎉 🥳",
+                         url="https://github.com/rishi-Sharma2002")
         print(date)
         print(name)
         return embed
@@ -65,6 +68,8 @@ class initialise():
         webhook.execute()
         requests.post(self.url, data={"content": "@everyone"})
 
+
 if __name__ == "__main__":
     i = initialise()
+    print('bot program initialized ...')
     i.check_birth()
